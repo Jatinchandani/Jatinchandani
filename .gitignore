@@ -1,0 +1,9 @@
+.env
+*.db
+resume.pdf
+resume.txt
+job_posts.txt
+__pycache__/
+*.pyc
+.venv/
+venv/
