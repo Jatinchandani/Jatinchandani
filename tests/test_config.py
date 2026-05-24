@@ -36,6 +36,14 @@ class TestConfig(unittest.TestCase):
         config.resume_text_path = "/tmp/nonexistent_resume_xyz.txt"
         self.assertEqual(config.resume_text, "")
 
+    def test_invalid_int_env_var_uses_default(self):
+        os.environ["JH_SMTP_PORT"] = "not_a_number"
+        try:
+            config = Config()
+            self.assertEqual(config.smtp_port, 587)
+        finally:
+            del os.environ["JH_SMTP_PORT"]
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -7,7 +7,6 @@ import sys
 from .config import Config
 from .pipeline import run_pipeline
 from .core.database import JobDatabase
-from .scanners.manual_paste import scan_text
 from .core.ai_drafter import draft_email
 from .core.email_sender import send_email
 
@@ -73,7 +72,13 @@ def cmd_paste(args, config: Config):
             location=job.location, description=job.description,
             url=job.url, contact_email=job.contact_email,
         )
-        if job_id and config.anthropic_api_key:
+        if not job_id:
+            logger.info(f"Job already seen: {job.title}")
+            continue
+        if not config.anthropic_api_key:
+            logger.info(f"Saved job: {job.title} -> {job.contact_email} (no API key for drafting)")
+            continue
+        try:
             result = draft_email(
                 job_title=job.title, company=job.company,
                 job_description=job.description,
@@ -87,6 +92,8 @@ def cmd_paste(args, config: Config):
             logger.info(f"\nTo: {job.contact_email}")
             logger.info(f"Subject: {result['subject']}")
             logger.info(f"Body:\n{result['body']}")
+        except Exception as e:
+            logger.error(f"Failed to draft email for {job.title}: {e}")
 
 
 def cmd_review(args, config: Config):

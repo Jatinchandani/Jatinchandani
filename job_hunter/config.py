@@ -11,7 +11,11 @@ def _env_bool(key: str, default: str = "false") -> bool:
 
 
 def _env_int(key: str, default: str = "0") -> int:
-    return int(os.getenv(key, default))
+    val = os.getenv(key, default)
+    try:
+        return int(val)
+    except ValueError:
+        return int(default)
 
 
 class Config:

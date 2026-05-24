@@ -54,12 +54,20 @@ Return valid JSON with "subject" and "body" keys only. No markdown."""
 
     import json
     text = response.content[0].text
-    start = text.find("{")
-    end = text.rfind("}") + 1
-    if start >= 0 and end > start:
-        return json.loads(text[start:end])
-
-    return {
+    fallback = {
         "subject": f"Application for {job_title} - {candidate_name}",
         "body": text,
     }
+
+    start = text.find("{")
+    end = text.rfind("}") + 1
+    if start < 0 or end <= start:
+        return fallback
+
+    try:
+        parsed = json.loads(text[start:end])
+        if "subject" in parsed and "body" in parsed:
+            return parsed
+        return fallback
+    except (json.JSONDecodeError, KeyError):
+        return fallback
