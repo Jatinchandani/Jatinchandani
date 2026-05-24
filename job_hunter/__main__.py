@@ -166,20 +166,27 @@ def main():
 
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
 
+    verbose_flag = dict(action="store_true", help="Enable verbose output")
+
     run_parser = subparsers.add_parser("run", help="Run a single scan cycle")
+    run_parser.add_argument("-v", "--verbose", **verbose_flag)
     run_parser.add_argument("--live", action="store_true", help="Disable dry-run mode")
     run_parser.add_argument("--auto-send", action="store_true", help="Auto-send drafted emails")
 
     loop_parser = subparsers.add_parser("loop", help="Run continuously on a schedule")
+    loop_parser.add_argument("-v", "--verbose", **verbose_flag)
     loop_parser.add_argument("--live", action="store_true", help="Disable dry-run mode")
     loop_parser.add_argument("--auto-send", action="store_true", help="Auto-send drafted emails")
 
-    subparsers.add_parser("paste", help="Paste a job post and process it")
+    paste_parser = subparsers.add_parser("paste", help="Paste a job post and process it")
+    paste_parser.add_argument("-v", "--verbose", **verbose_flag)
 
     review_parser = subparsers.add_parser("review", help="Review drafted emails")
+    review_parser.add_argument("-v", "--verbose", **verbose_flag)
     review_parser.add_argument("--send", action="store_true", help="Option to send each draft")
 
-    subparsers.add_parser("stats", help="Show lifetime statistics")
+    stats_parser = subparsers.add_parser("stats", help="Show lifetime statistics")
+    stats_parser.add_argument("-v", "--verbose", **verbose_flag)
 
     args = parser.parse_args()
     setup_logging(args.verbose)

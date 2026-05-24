@@ -10,7 +10,6 @@ from .base import JobPosting
 from ..core.email_extractor import extract_emails
 
 FEED_URLS = [
-    "https://remotive.com/remote-jobs/software-dev/feed",
     "https://remotive.com/remote-jobs/data/feed",
     "https://weworkremotely.com/categories/remote-back-end-programming-jobs.rss",
     "https://weworkremotely.com/categories/remote-full-stack-programming-jobs.rss",
